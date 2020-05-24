@@ -6,7 +6,7 @@ app = Flask(__name__)
 def home():
     return "<h1>yo</h1> Hello World - Home page"
 
-@app.route("/admin")
+@app.route("/admin/")
 def admin():
     return redirect(url_for("home"))
 
