@@ -3,5 +3,13 @@
 {% block h1 %}User page{% endblock %}
 
 {% block content %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %}
+                <p>{{msg}}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     <p>Hello: {% print(session["user"]) %}</p>
+    
 {% endblock %}
