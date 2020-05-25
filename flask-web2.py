@@ -19,7 +19,6 @@ class users(db.Model):
         self.name = name
         self.email = email
 
-
 @app.route("/")
 def slash():
     return redirect(url_for("home"))
@@ -46,10 +45,12 @@ def login():
 
         if db_user:
             session["email"] = db_user.email
+            flash("Found User")
         else:
+            flash("Added User")
             usr =  users(user,"")
             db.session.add(usr)
-            db.session.commit
+            db.session.commit()
 
         flash("Login success")
         return redirect(url_for("user"))
@@ -57,11 +58,13 @@ def login():
         if "user" in session:
             flash("Welcome back") 
             return redirect(url_for("user"))
-        return render_template("login.html")
+        else:
+            return render_template("login.html")
 
 @app.route("/user", methods=["POST","GET"])
 def user():
     email = None
+
     if "user" in session:
         user = session["user"]
         if request.method == "POST":
@@ -69,12 +72,15 @@ def user():
             session["email"] = email
             db_user = users.query.filter_by(name=user).first()
             db_user.email = email
-            db.session.commit
+            db.session.commit()
 
             flash("Email saved") 
         else:
             if email in session:
                 email = session["email"]
+                print("insession")
+            else:
+                print("not in session")
 
         return render_template("user.html",email=email)
     else:
