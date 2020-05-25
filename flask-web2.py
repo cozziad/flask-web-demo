@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.secret_key = "asdfafa43f44rfe"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://users.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.permanent_session_lifetime = timedelta(days=5)
 
@@ -42,6 +42,15 @@ def login():
         user = request.form["nm"]
         session["user"] = user
         session.permanent = True
+        db_user = users.query.filter_by(name=user).first()
+
+        if db_user:
+            session["email"] = db_user.email
+        else:
+            usr =  users(user,"")
+            db.session.add(usr)
+            db.session.commit
+
         flash("Login success")
         return redirect(url_for("user"))
     else:
@@ -58,6 +67,10 @@ def user():
         if request.method == "POST":
             email = request.form["email"]
             session["email"] = email
+            db_user = users.query.filter_by(name=user).first()
+            db_user.email = email
+            db.session.commit
+
             flash("Email saved") 
         else:
             if email in session:
