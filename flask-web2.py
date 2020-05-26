@@ -46,6 +46,7 @@ def login():
         if db_user:
             session["email"] = db_user.email
             flash("Found User")
+            flash(session["email"])
         else:
             flash("Added User")
             usr =  users(user,"")
@@ -67,6 +68,7 @@ def user():
 
     if "user" in session:
         user = session["user"]
+      
         if request.method == "POST":
             email = request.form["email"]
             session["email"] = email
@@ -76,11 +78,7 @@ def user():
 
             flash("Email saved") 
         else:
-            if email in session:
-                email = session["email"]
-                print("insession")
-            else:
-                print("not in session")
+            email = session["email"]
 
         return render_template("user.html",email=email)
     else:
