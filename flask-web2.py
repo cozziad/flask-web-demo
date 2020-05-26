@@ -45,8 +45,6 @@ def login():
 
         if db_user:
             session["email"] = db_user.email
-            flash("Found User")
-            flash(session["email"])
         else:
             flash("Added User")
             usr =  users(user,"")
@@ -83,6 +81,10 @@ def user():
         return render_template("user.html",email=email)
     else:
         return redirect(url_for("login"))
+
+@app.route("/view")
+def view():
+    return render_template("view.html",values=users.query.all())
 
 @app.route("/logout")
 def logout():
